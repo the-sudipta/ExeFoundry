@@ -89,7 +89,7 @@ The GitHub workflow builds:
 - `exefoundry-macos`
 - SHA-256 checksum files for each binary
 
-Every push to `main` compiles and uploads build artifacts for Windows, Linux, and macOS. Push a tag like `v1.1.1` to create a GitHub Release automatically. The crate version in `Cargo.toml` should be updated to the same version before tagging.
+Every push to `main` compiles and uploads build artifacts for Windows, Linux, and macOS. Push a tag like `v1.1.2` to create a GitHub Release automatically. The crate version in `Cargo.toml` should be updated to the same version before tagging.
 
 The workflow publishes `docs/` to the `gh-pages` branch on every push to `main`. In the repository settings, set GitHub Pages to deploy from the `gh-pages` branch if it is not already enabled.
 
