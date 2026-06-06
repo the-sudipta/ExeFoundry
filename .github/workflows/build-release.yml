@@ -142,52 +142,20 @@ jobs:
           generate_release_notes: true
 
   pages:
-    name: Publish GitHub Pages site
+    name: Publish website branch
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      contents: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Ensure Pages is configured
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          GH_API: ${{ github.api_url }}
-        run: |
-          set -euo pipefail
-          headers=(
-            -H "Accept: application/vnd.github+json"
-            -H "Authorization: Bearer ${GH_TOKEN}"
-            -H "X-GitHub-Api-Version: 2022-11-28"
-          )
-          body='{"build_type":"workflow","source":{"branch":"main","path":"/docs"}}'
-          status=$(curl -sS -o /tmp/pages.json -w "%{http_code}" "${headers[@]}" "${GH_API}/repos/${GH_REPO}/pages")
-          if [ "$status" = "404" ]; then
-            curl -sS -f -X POST "${headers[@]}" "${GH_API}/repos/${GH_REPO}/pages" -d "$body" > /tmp/pages-create.json
-          elif [ "$status" = "200" ]; then
-            curl -sS -f -X PUT "${headers[@]}" "${GH_API}/repos/${GH_REPO}/pages" -d "$body" > /tmp/pages-update.json
-          else
-            cat /tmp/pages.json
-            exit 1
-          fi
-
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Publish docs to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: docs
-
-      - name: Deploy Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./docs
+          force_orphan: true
