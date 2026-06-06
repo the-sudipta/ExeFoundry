@@ -1,153 +1,103 @@
-<!-- Hero -->
-<div align="center" style="font-family: ui-sans-serif, system-ui, Segoe UI; color:#e5e7eb; background:#0b1220; padding:28px 18px; border-radius:16px;">
-  <h1 style="margin:0 0 6px; font-size:36px;">⚒️ ExeFoundry — BAT → EXE Converter (portable)</h1>
-  <p style="margin:0 0 16px; font-size:16px; opacity:.9;">
-    Turn any Windows <b>Batch (<code>.bat</code>)</b> into a <b>single portable <code>.exe</code></b>.<br>
-    Custom icon, console/GUI mode, and argument forwarding. No admin rights needed.
-  </p>
-
-  <img alt="Windows" src="https://img.shields.io/badge/OS-Windows-0078D6?logo=windows&logoColor=white" />
-  <img alt="Shell" src="https://img.shields.io/badge/Shell-PowerShell%20%2B%20C%23-111827" />
-  <img alt="Requires" src="https://img.shields.io/badge/Requires-.NET%20compiler%20(csc)-informational" />
-  <img alt="License" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
-</div>
-
-<!-- Quick-links badges (keep right after the hero) -->
-<p align="center" style="margin:10px 0 0;">
-  <a href="docs/ExeFoundry Portable BAT to EXE Converter for Shareable Windows Utilities.pdf">
-    <img alt="Docs (PDF)" src="https://img.shields.io/badge/Docs-PDF-2563EB?logo=readthedocs&logoColor=white">
-  </a>
-  <a href="#-documentation">
-    <img alt="Docs Section" src="https://img.shields.io/badge/Documentation-0EA5E9">
-  </a>
-  <a href="#-quick-start">
-    <img alt="Quick Start" src="https://img.shields.io/badge/Quick%20Start-22C55E">
-  </a>
+<p align="center">
+  <img src="scripts/icon/Bat%20to%20EXE%20icon%20round%20corner.png" alt="ExeFoundry logo" width="120">
 </p>
 
-<!-- =========================
-      Dedicated Documentation (NEW)
-     ========================= -->
-<div id="-documentation" class="blk card">
-  <h2>📄 Documentation</h2>
-  <ul>
-    <li><b>Tech note (PDF):</b> <a href="docs/ExeFoundry Portable BAT to EXE Converter for Shareable Windows Utilities.pdf">docs/ExeFoundry Portable BAT to EXE Converter for Shareable Windows Utilities.pdf</a></li>
-    <li><b>LaTeX source (ZIP):</b> <a href="docs/Documentation Maker.zip">docs/Documentation Maker.zip</a></li>
-    <li><b>How to Cite:</b> <a href="CITATION.cff">CITATION.cff</a></li>
-  </ul>
-  <p style="opacity:.85;margin:.4rem 0 0;">
-    Tip: Put both the <code>PDF</code> and the <code>ZIP</code> in each Release along with checksums — this helps reviewers & professors find docs fast.
-  </p>
-</div>
+# ExeFoundry
 
-<!-- =========================
-      Background & Motivation
-     ========================= -->
-<div class="blk card">
-  <h2>🧭 Background — Why this tool exists</h2>
-  <p class="lead" style="margin:.25rem 0 .75rem; font-size:16px; opacity:.9">
-    Lots of handy internal tools still ship as <b>.bat</b> scripts. Users want something that’s
-    <b>double-clickable</b>, has a <b>proper icon</b>, and can be <b>shared as a single file</b> without setup.
-    ExeFoundry turns your batch into a clean <code>.exe</code> while keeping behavior identical.
-  </p>
-  <ul>
-    <li>Ship utilities as one file (easier to email/host).</li>
-    <li>Keep the original arguments and quoting behavior.</li>
-    <li>Offer a GUI mode for end-user apps (no console flash).</li>
-  </ul>
-</div>
+ExeFoundry converts a Windows Batch file (`.bat`) into a single portable Windows executable (`.exe`). The new implementation is written in Rust, so the converter itself can be released as one standalone binary for Windows, macOS, and Linux.
 
-<div class="blk card">
-  <h2>🚀 What ExeFoundry does (in simple words)</h2>
-  <p class="lead" style="margin:.25rem 0 .75rem; font-size:16px; opacity:.9">
-    You give it a <b>.bat</b>. It builds a tiny <b>C# launcher</b> that runs your batch with the same arguments
-    and (optionally) embeds an <b>.ico</b> as the app icon. Output is a <b>single .exe</b>.
-  </p>
-  <ul>
-    <li>No admin rights, registry edits, or system changes.</li>
-    <li>Works on standard Windows 10/11 with a C# compiler available.</li>
-    <li>Perfect for packaging scripts for non-technical users.</li>
-  </ul>
-</div>
+The generated file is still a Windows `.exe`, because `.bat` scripts are Windows scripts. Running the converter on macOS or Linux is useful for packaging Windows utilities from those systems.
 
-<div class="blk card">
-  <h2>🧩 Typical use case</h2>
-  <ol style="margin-left:1.1rem">
-    <li><b>Prepare</b> your script: <code>scripts\tool.bat</code>.</li>
-    <li><b>Build</b> with ExeFoundry into <code>Tool.exe</code> (with or without a custom icon).</li>
-    <li><b>Share</b> the single EXE — users just double-click and pass arguments as usual.</li>
-  </ol>
-  <p class="muted" style="opacity:.85">Tip: For end-user facing tools, use the GUI build switch to hide the console.</p>
-</div>
+## Website and Playground
 
-<div class="blk card">
-  <h2>🛡️ Good-citizen notes</h2>
-  <p class="lead" style="margin:.25rem 0 .75rem; font-size:16px; opacity:.9">
-    ExeFoundry does <b>not</b> access OS core, registry, or services. It simply launches your batch.
-  </p>
-  <ul>
-    <li>No admin / elevation required.</li>
-    <li>For production distribution, consider code-signing the EXE.</li>
-    <li>Quote paths with spaces: <code>"C:\Path With Spaces\script.bat"</code>.</li>
-  </ul>
-</div>
+The repository ships with a GitHub Pages website in `docs/`.
 
-<div class="blk card">
-  <h2>🎯 <span class="result">Outcome</span></h2>
-  <ul>
-    <li>Input: <b>.bat</b> + (optional) <b>.ico</b></li>
-    <li>Output: <b>single .exe</b> (console or GUI)</li>
-    <li>Argument forwarding preserved</li>
-    <li>Same behavior as the original batch</li>
-  </ul>
-</div>
+- Website: <https://the-sudipta.github.io/ExeFoundry/>
+- Playground: <https://the-sudipta.github.io/ExeFoundry/#playground>
+- Releases: <https://github.com/the-sudipta/ExeFoundry/releases/latest>
 
-<div class="blk card">
-  <h2>📊 <span id="-quick-start" class="step">Quick Start</span></h2>
-  <ol>
-    <li>Create a batch file, e.g., <code>scripts\hello.bat</code> (example below)</li>
-    <li>Open PowerShell in the repo root</li>
-    <li>Run a build command (see examples)</li>
-  </ol>
-</div>
+The playground helps users pick their platform binary, input BAT, output EXE, icon, and console/GUI mode, then generates the exact command to run.
 
-<div class="blk card">
-  <h2>⚙️ Config</h2>
-  <p><span class="pill">Icon (.ico)</span><span class="pill">GUI switch</span><span class="pill">Quoting</span></p>
-  <pre><code># Use -Icon to embed an .ico; add -WinExe for a GUI build (no console)
-# Always quote paths with spaces and use absolute/relative paths consistently.
-</code></pre>
-</div>
+## What It Does
 
-<div class="blk card">
-  <h2>🧠 How it works</h2>
-  <ul>
-    <li>Builds a tiny <code>C#</code> launcher that calls your <code>.bat</code> with proper quoting</li>
-    <li>Packs the launcher into a single <code>.exe</code> (with optional icon)</li>
-    <li>When run, the EXE executes the batch and forwards arguments</li>
-  </ul>
-</div>
+- Embeds the entire `.bat` payload inside the generated `.exe`.
+- Embeds ExeFoundry's built-in icon by default, so the generated EXE does not need a separate icon file.
+- Optionally embeds your own `.ico`, `.png`, or other supported image instead.
+- Preserves argument forwarding to the original batch script.
+- Supports console output by default, or GUI/no-console mode with `--gui`.
+- Does not require PowerShell, `csc.exe`, .NET Framework, or admin rights for normal use.
 
-<div class="blk card">
-  <h2>📦 Command-line options</h2>
+The old PowerShell/C# scripts are still in `scripts/` for reference, but the Rust binary is now the primary tool.
 
-| Option       | Required | Description                                                        |
-|--------------|:--------:|--------------------------------------------------------------------|
-| `-InputBat`  | ✅       | Path to the source `.bat` file.                                    |
-| `-OutputExe` | ❌       | Output `.exe` path (default: same folder/name as BAT).             |
-| `-Icon`      | ❌       | Optional `.ico` to embed as the EXE icon.                          |
-| `-WinExe`    | ❌       | Build as GUI app (no console window). Omit for console builds.     |
+## Quick Start
 
-**Examples**
 ```powershell
-# Basic
-.\ExeFoundry.exe -InputBat ".\scripts\build.bat"
+# Windows
+.\exefoundry-windows-x64.exe --input ".\scripts\tool.bat" --output ".\Tool.exe"
 
-# Custom output
-.\ExeFoundry.exe -InputBat ".\scripts\build.bat" -OutputExe ".\Build.exe"
+# With a custom icon embedded into the output EXE instead of the bundled ExeFoundry icon
+.\exefoundry-windows-x64.exe --input ".\scripts\tool.bat" --output ".\Tool.exe" --icon ".\scripts\icon\bat_to_exe.ico"
 
-# Icon + Console (default)
-.\ExeFoundry.exe -InputBat ".\scripts\tool.bat" -Icon ".\scripts\icon\bat_to_exe.ico"
+# GUI app, no console window
+.\exefoundry-windows-x64.exe --input ".\scripts\tool.bat" --output ".\Tool.exe" --icon ".\scripts\icon\bat_to_exe.ico" --gui
+```
 
-# Icon + GUI (no console)
-.\ExeFoundry.exe -InputBat ".\scripts\tool.bat" -OutputExe ".\Tool.exe" -Icon ".\scripts\icon\bat_to_exe.ico" -WinExe
+On macOS or Linux, use the matching `exefoundry-macos` or `exefoundry-linux-x64` release binary with the same flags. The output remains a Windows `.exe`.
+
+## Interactive Mode
+
+Run ExeFoundry without arguments, or pass `--interactive`, and it will ask for the BAT path, output path, icon path, and console mode.
+
+```powershell
+.\exefoundry-windows-x64.exe --interactive
+```
+
+## Command-Line Options
+
+| Option | Description |
+| --- | --- |
+| `-i, --input <BAT>` | Source `.bat` file to package. |
+| `-o, --output <EXE>` | Output `.exe` path. Defaults to the input name with `.exe`. |
+| `--icon <ICO_OR_IMAGE>` | Optional custom icon/image to embed into the output EXE. If omitted, ExeFoundry embeds its bundled icon. |
+| `--gui`, `--win-exe` | Build the output as a GUI app with no console window. |
+| `--console` | Build the output as a console app. This is the default. |
+| `--interactive` | Prompt for missing values. |
+| `--template <EXE>` | Development escape hatch for using an external Windows runner template. Release binaries already embed this. |
+
+## Build From Source
+
+For a local development build, build the Windows runner template first, then build the converter with the template embedded:
+
+```powershell
+cargo build --release --bin exefoundry-runner
+$env:EXEFOUNDRY_RUNNER_TEMPLATE = (Resolve-Path ".\target\release\exefoundry-runner.exe").Path
+cargo build --release --bin exefoundry
+```
+
+You can also run a development converter without embedding the template:
+
+```powershell
+cargo run --bin exefoundry -- --input ".\scripts\tool.bat" --output ".\Tool.exe" --template ".\target\release\exefoundry-runner.exe"
+```
+
+## Releases and Versioning
+
+The GitHub workflow builds:
+
+- `exefoundry-windows-x64.exe`
+- `exefoundry-linux-x64`
+- `exefoundry-macos`
+- SHA-256 checksum files for each binary
+
+Every push to `main` compiles and uploads build artifacts for Windows, Linux, and macOS. Push a tag like `v1.1.0` to create a GitHub Release automatically. The crate version in `Cargo.toml` should be updated to the same version before tagging.
+
+GitHub Pages is deployed from `docs/` on every push to `main`.
+
+## Documentation
+
+- PDF note: `docs/ExeFoundry Portable BAT to EXE Converter for Shareable Windows Utilities.pdf`
+- Citation metadata: `CITATION.cff`
+
+## License
+
+MIT

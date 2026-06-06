@@ -1,0 +1,24 @@
+[package]
+name = "exefoundry"
+version = "1.1.0"
+edition = "2024"
+license = "MIT"
+description = "Portable BAT to EXE converter with embedded payload and icon support"
+build = "build.rs"
+
+[dependencies]
+anyhow = "1.0"
+clap = { version = "4.5", features = ["derive"] }
+editpe = "0.2"
+tempfile = "3.15"
+
+[target.'cfg(windows)'.build-dependencies]
+winresource = "0.1"
+
+[[bin]]
+name = "exefoundry"
+path = "src/main.rs"
+
+[[bin]]
+name = "exefoundry-runner"
+path = "src/bin/exefoundry-runner.rs"

@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ExeFoundry - BAT to EXE Converter</title>
+    <meta
+      name="description"
+      content="Convert Windows batch files into single portable EXE files with embedded payloads and icons."
+    >
+    <link rel="icon" href="assets/exefoundry.ico">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="ExeFoundry home">
+        <img src="assets/exefoundry-logo.png" alt="ExeFoundry logo">
+        <span>ExeFoundry</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#playground">Playground</a>
+        <a href="#downloads">Downloads</a>
+        <a href="#workflow">Workflow</a>
+        <a class="nav-button" href="https://github.com/the-sudipta/ExeFoundry/releases/latest">Get Release</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Rust powered BAT to EXE packaging</p>
+          <h1>Turn a batch script into a polished Windows executable.</h1>
+          <p class="hero-text">
+            ExeFoundry embeds your entire <code>.bat</code> payload and icon into one portable
+            <code>.exe</code>. The converter runs on Windows, macOS, and Linux, so release work can
+            happen from any development machine.
+          </p>
+          <div class="hero-actions">
+            <a class="primary-action" href="https://github.com/the-sudipta/ExeFoundry/releases/latest">Download latest</a>
+            <a class="secondary-action" href="#playground">Try the playground</a>
+          </div>
+        </div>
+        <div class="hero-panel" aria-label="ExeFoundry command preview">
+          <img src="assets/exefoundry-logo.png" alt="" class="panel-logo">
+          <div class="terminal">
+            <div class="terminal-bar">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <pre><code>exefoundry --input tool.bat --output Tool.exe
+OK: Built Tool.exe
+Tool.exe now contains:
+  BAT payload
+  embedded icon
+  argument forwarding</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="feature-grid" aria-label="Highlights">
+        <article>
+          <h2>Single file output</h2>
+          <p>The generated EXE carries the batch payload inside itself, so users only receive one file.</p>
+        </article>
+        <article>
+          <h2>Icon included</h2>
+          <p>Use the bundled ExeFoundry logo or pass your own icon. The icon is written into the EXE resource table.</p>
+        </article>
+        <article>
+          <h2>Cross-platform builder</h2>
+          <p>Run the converter on Windows, macOS, or Linux while producing Windows EXE files for BAT utilities.</p>
+        </article>
+      </section>
+
+      <section id="playground" class="playground">
+        <div class="section-heading">
+          <p class="eyebrow">Playground</p>
+          <h2>Build the exact command before you run it.</h2>
+          <p>
+            Pick a platform binary, name your input and output, choose console mode, and preview the
+            command. The playground stays in your browser and does not upload files.
+          </p>
+        </div>
+
+        <div class="playground-shell">
+          <form class="builder" id="commandForm">
+            <label>
+              Platform
+              <select id="platform">
+                <option value="windows">Windows</option>
+                <option value="linux">Linux</option>
+                <option value="macos">macOS</option>
+              </select>
+            </label>
+
+            <label>
+              Input BAT path
+              <input id="inputPath" type="text" value="scripts\tool.bat" autocomplete="off">
+            </label>
+
+            <label>
+              Output EXE path
+              <input id="outputPath" type="text" value="Tool.exe" autocomplete="off">
+            </label>
+
+            <label>
+              Custom icon path
+              <input id="iconPath" type="text" placeholder="Optional, bundled icon is used by default" autocomplete="off">
+            </label>
+
+            <div class="switch-row">
+              <label class="checkbox">
+                <input id="guiMode" type="checkbox">
+                <span>GUI mode, no console window</span>
+              </label>
+              <label class="checkbox">
+                <input id="quotePaths" type="checkbox" checked>
+                <span>Quote paths</span>
+              </label>
+            </div>
+          </form>
+
+          <aside class="preview">
+            <div class="preview-header">
+              <span>Generated command</span>
+              <button type="button" id="copyCommand">Copy</button>
+            </div>
+            <pre id="commandOutput"></pre>
+            <div class="preview-meta">
+              <span id="iconStatus">Bundled ExeFoundry icon will be embedded.</span>
+              <span id="modeStatus">Console app output.</span>
+            </div>
+          </aside>
+        </div>
+
+        <div class="bat-lab">
+          <div>
+            <h3>Sample BAT</h3>
+            <p>Edit this sample and download it locally to test ExeFoundry.</p>
+          </div>
+          <textarea id="batSample" spellcheck="false">@echo off
+echo Hello from ExeFoundry
+echo First argument: %1
+pause</textarea>
+          <button type="button" id="downloadSample">Download sample BAT</button>
+        </div>
+      </section>
+
+      <section id="downloads" class="downloads">
+        <div class="section-heading">
+          <p class="eyebrow">Downloads</p>
+          <h2>One converter for each operating system.</h2>
+        </div>
+        <div class="download-list">
+          <a href="https://github.com/the-sudipta/ExeFoundry/releases/latest/download/exefoundry-windows-x64.exe">
+            <strong>Windows</strong>
+            <span>exefoundry-windows-x64.exe</span>
+          </a>
+          <a href="https://github.com/the-sudipta/ExeFoundry/releases/latest/download/exefoundry-linux-x64">
+            <strong>Linux</strong>
+            <span>exefoundry-linux-x64</span>
+          </a>
+          <a href="https://github.com/the-sudipta/ExeFoundry/releases/latest/download/exefoundry-macos">
+            <strong>macOS</strong>
+            <span>exefoundry-macos</span>
+          </a>
+        </div>
+      </section>
+
+      <section id="workflow" class="workflow">
+        <div class="section-heading">
+          <p class="eyebrow">Workflow</p>
+          <h2>How ExeFoundry packages a BAT file.</h2>
+        </div>
+        <ol>
+          <li>
+            <span>1</span>
+            <p>Read the source BAT bytes exactly as written.</p>
+          </li>
+          <li>
+            <span>2</span>
+            <p>Copy a small Windows runner template into the output EXE.</p>
+          </li>
+          <li>
+            <span>3</span>
+            <p>Embed the bundled icon or your custom icon into the EXE resources.</p>
+          </li>
+          <li>
+            <span>4</span>
+            <p>Append the BAT payload and metadata so the EXE can extract and run it.</p>
+          </li>
+        </ol>
+      </section>
+    </main>
+
+    <footer>
+      <img src="assets/exefoundry-logo.png" alt="ExeFoundry logo">
+      <span>ExeFoundry is MIT licensed. Built for simple, shareable Windows utilities.</span>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,169 @@
+name: Build and Release
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+
+env:
+  CARGO_TERM_COLOR: always
+
+permissions:
+  contents: read
+
+jobs:
+  runner-template:
+    name: Build Windows runner template
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build runner
+        run: cargo build --release --bin exefoundry-runner
+
+      - name: Upload runner template
+        uses: actions/upload-artifact@v4
+        with:
+          name: runner-template
+          path: target/release/exefoundry-runner.exe
+          if-no-files-found: error
+
+  build:
+    name: Build ${{ matrix.name }}
+    needs: runner-template
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: windows-x64
+            os: windows-latest
+            bin_path: target/release/exefoundry.exe
+            artifact_name: exefoundry-windows-x64.exe
+          - name: linux-x64
+            os: ubuntu-latest
+            bin_path: target/release/exefoundry
+            artifact_name: exefoundry-linux-x64
+          - name: macos
+            os: macos-latest
+            bin_path: target/release/exefoundry
+            artifact_name: exefoundry-macos
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Download Windows runner template
+        uses: actions/download-artifact@v4
+        with:
+          name: runner-template
+          path: target/template
+
+      - name: Test
+        shell: pwsh
+        run: cargo test --locked
+
+      - name: Build converter with embedded runner
+        shell: pwsh
+        env:
+          EXEFOUNDRY_RUNNER_TEMPLATE: target/template/exefoundry-runner.exe
+        run: cargo build --release --locked --bin exefoundry
+
+      - name: Package binary
+        shell: pwsh
+        env:
+          BIN_PATH: ${{ matrix.bin_path }}
+          ARTIFACT_NAME: ${{ matrix.artifact_name }}
+        run: |
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          Copy-Item $env:BIN_PATH "dist/$env:ARTIFACT_NAME"
+          $hash = Get-FileHash "dist/$env:ARTIFACT_NAME" -Algorithm SHA256
+          "$($hash.Hash.ToLower())  $env:ARTIFACT_NAME" | Set-Content "dist/$env:ARTIFACT_NAME.sha256"
+
+      - name: Upload platform artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: dist/*
+          if-no-files-found: error
+
+  release:
+    name: Publish GitHub release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download built artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          body: |
+            ## ExeFoundry ${{ github.ref_name }}
+
+            ExeFoundry converts Windows `.bat` scripts into single portable `.exe` files with the BAT payload and icon embedded inside the executable.
+
+            ### Downloads
+
+            - `exefoundry-windows-x64.exe` for Windows
+            - `exefoundry-linux-x64` for Linux
+            - `exefoundry-macos` for macOS
+            - `.sha256` files for checksum verification
+
+            ### Basic Usage
+
+            ```powershell
+            .\exefoundry-windows-x64.exe --input ".\tool.bat" --output ".\Tool.exe"
+            .\exefoundry-windows-x64.exe --input ".\tool.bat" --output ".\Tool.exe" --icon ".\app.ico" --gui
+            ```
+
+            On Linux and macOS, use the matching platform binary with the same flags. The output is still a Windows `.exe`, because BAT files are Windows scripts.
+          generate_release_notes: true
+
+  pages:
+    name: Publish GitHub Pages site
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
