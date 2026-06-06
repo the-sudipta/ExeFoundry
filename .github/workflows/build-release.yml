@@ -152,10 +152,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Publish docs to gh-pages branch
+      - name: Prepare website artifact
+        run: |
+          mkdir -p site/docs/assets
+          cp index.html site/index.html
+          cp docs/assets/* site/docs/assets/
+
+      - name: Publish website to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: ./docs
+          publish_dir: ./site
           force_orphan: true

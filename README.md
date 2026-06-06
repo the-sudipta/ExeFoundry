@@ -10,7 +10,7 @@ The generated file is still a Windows `.exe`, because `.bat` scripts are Windows
 
 ## Website and Playground
 
-The repository ships with a GitHub Pages website in `docs/`.
+The repository ships with a GitHub Pages website in the root `index.html`.
 
 - Website: <https://the-sudipta.github.io/ExeFoundry/>
 - Playground: <https://the-sudipta.github.io/ExeFoundry/#playground>
@@ -91,7 +91,7 @@ The GitHub workflow builds:
 
 Every push to `main` compiles and uploads build artifacts for Windows, Linux, and macOS. Push a tag like `v1.1.2` to create a GitHub Release automatically. The crate version in `Cargo.toml` should be updated to the same version before tagging.
 
-The workflow publishes `docs/` to the `gh-pages` branch on every push to `main`. In the repository settings, set GitHub Pages to deploy from the `gh-pages` branch if it is not already enabled.
+The workflow publishes the root `index.html` plus logo assets to the `gh-pages` branch on every push to `main`. In the repository settings, set GitHub Pages to deploy from the `gh-pages` branch if it is not already enabled.
 
 ## Documentation
 
